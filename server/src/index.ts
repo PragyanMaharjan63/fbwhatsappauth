@@ -1,6 +1,5 @@
 import crypto from "node:crypto";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
 import session from "express-session";
@@ -166,7 +165,7 @@ app.post("/api/disconnect", (req, res) => req.session.destroy((error) => {
 }));
 
 if (isProduction) {
-  const clientDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../client");
+  const clientDirectory = path.resolve(process.cwd(), "public");
   app.use(express.static(clientDirectory));
   app.get("*", (_req, res) => res.sendFile(path.join(clientDirectory, "index.html")));
 }
@@ -176,7 +175,11 @@ app.use((error: unknown, _req: Request, res: Response, _next: unknown) => {
   res.status(500).json({ error: { message: "An unexpected server error occurred." } });
 });
 
-app.listen(port, host, () => {
-  console.log(`Avernek review demo API listening at http://${host}:${port}`);
-  if (configurationMissing().length) console.warn(`Configuration required: ${configurationMissing().join(", ")}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(port, host, () => {
+    console.log(`Avernek review demo API listening at http://${host}:${port}`);
+    if (configurationMissing().length) console.warn(`Configuration required: ${configurationMissing().join(", ")}`);
+  });
+}
+
+export default app;

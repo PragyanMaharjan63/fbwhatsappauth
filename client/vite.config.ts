@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [react()],
   envDir: path.resolve(__dirname, ".."),
   build: {
-    outDir: path.resolve(__dirname, "../dist/client"),
-    emptyOutDir: false,
+    outDir: path.resolve(__dirname, "../public"),
+    emptyOutDir: true,
   },
   server: {
     host: "localhost",

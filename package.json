@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20 <26"
+  },
   "scripts": {
     "dev": "concurrently -k -n API,WEB -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "tsx watch server/src/index.ts",
     "dev:client": "vite --config client/vite.config.ts",
-    "typecheck": "tsc -p server/tsconfig.json --noEmit && tsc -p client/tsconfig.json --noEmit",
+    "typecheck": "tsc -p server/tsconfig.json --noEmit && tsc -p client/tsconfig.json --noEmit && tsc -p tsconfig.vercel.json --noEmit",
     "build": "npm run clean && npm run build:server && npm run build:client",
-    "clean": "node -e \"import('node:fs').then(({rmSync})=>rmSync('dist',{recursive:true,force:true}))\"",
+    "clean": "node -e \"import('node:fs').then(({rmSync})=>{rmSync('dist',{recursive:true,force:true});rmSync('public',{recursive:true,force:true})})\"",
     "build:server": "tsc -p server/tsconfig.json",
     "build:client": "NODE_ENV=production vite build --config client/vite.config.ts",
     "start": "node dist/server/index.js"

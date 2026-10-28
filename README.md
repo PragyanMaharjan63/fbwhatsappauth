@@ -38,6 +38,28 @@ The backend reads this value; the frontend never needs it directly. Also set `ME
 
 For production, set `NODE_ENV=production`, use the same HTTPS origin for `FRONTEND_URL` and `BACKEND_URL`, then run `npm run build && npm start`. Express serves the built client and API.
 
+## Vercel deployment
+
+This repository includes a root `index.ts` Express entry and `vercel.json`. The production client is built into `public/`, which Vercel serves as static output, while `/api/*` is handled by the exported Express application.
+
+In **Vercel → Project → Settings → Environment Variables**, add the values listed in `.env.vercel.example`. For the production deployment, the URL values must be:
+
+```dotenv
+FRONTEND_URL=https://fbwhatsappauth.vercel.app
+BACKEND_URL=https://fbwhatsappauth.vercel.app
+NODE_ENV=production
+```
+
+Do not upload or commit `.env`. Add `META_APP_SECRET` and `SESSION_SECRET` directly in Vercel and mark them sensitive. After adding or changing variables, redeploy the production deployment; Vercel does not retroactively apply variables to an existing deployment.
+
+Set the Meta Valid OAuth Redirect URI to:
+
+```text
+https://fbwhatsappauth.vercel.app/api/auth/meta/callback
+```
+
+The default in-memory Express session store is intended for a single-process review demo. Vercel Functions can run on multiple instances, so a durable production deployment should use a shared session store such as Redis. Test the full OAuth round trip before submitting the Vercel URL for review.
+
 ## Security model
 
 - The OAuth code is exchanged only by the backend.

@@ -40,6 +40,12 @@ For review, deploy to HTTPS and add the exact production URI, for example:
 https://meta-review.example.com/api/auth/meta/callback
 ```
 
+For the current Vercel production domain, use:
+
+```text
+https://fbwhatsappauth.vercel.app/api/auth/meta/callback
+```
+
 Then configure:
 
 - **App Domains:** `meta-review.example.com` (hostname only)
